@@ -9,20 +9,18 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS for Text Visibility & Styling
+# Premium Custom CSS
 st.markdown("""
     <style>
     .stApp {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         color: white;
     }
-    /* Detail Box Text Visibility Fix */
     .stTextArea textarea {
         background-color: #1e293b !important;
-        color: #ffffff !important;
+        color: #38bdf8 !important;
         border: 2px solid #334155 !important;
         border-radius: 10px !important;
-        font-size: 16px !important;
     }
     .stButton > button {
         width: 100%;
@@ -53,7 +51,7 @@ st.markdown("<h1 style='text-align: center;'>🎯 Borderless QR Generator</h1>",
 st.write("Apni detail niche fill karein aur borderless QR download karein.")
 
 # Input Box
-detail = st.text_area("Yahan Detail Fill Karein:", placeholder="Link ya Text likhein...", height=200)
+detail = st.text_area("Yahan Detail Fill Karein:", placeholder="Link ya Text likhein...", height=150)
 
 if st.button("Generate QR Code"):
     if detail.strip() == "":
@@ -61,8 +59,8 @@ if st.button("Generate QR Code"):
     else:
         with st.spinner("QR ban raha hai..."):
             try:
-                # Detail puri aane ke liye error correction 'M' aur micro=False rakha hai
-                qr = segno.make(detail, error='M', micro=False)
+                # Making QR with border=0 (No white space)
+                qr = segno.make(detail, error='H')
                 
                 # Saving to buffer
                 img_buf = io.BytesIO()
@@ -71,7 +69,7 @@ if st.button("Generate QR Code"):
                 
                 # Preview and Download
                 st.markdown("---")
-                st.image(img_buf, caption="Aapka Complete Detail QR", width=300)
+                st.image(img_buf, caption="Aapka Borderless QR", width=300)
                 
                 st.download_button(
                     label="📥 Download QR Code",
@@ -79,7 +77,7 @@ if st.button("Generate QR Code"):
                     file_name="Vikas_Mishra_QR.png",
                     mime="image/png"
                 )
-                st.success("QR taiyar hai! Ab saari detail scan hogi.")
+                st.success("QR taiyar hai!")
             except Exception as e:
                 st.error(f"Error: {e}")
 
