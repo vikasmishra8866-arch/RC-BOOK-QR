@@ -1,7 +1,3 @@
-import streamlit as st
-import segno
-import io
-
 # Page Config for Professional Look
 st.set_page_config(
     page_title="Pro QR Generator | Vikas Mishra",
