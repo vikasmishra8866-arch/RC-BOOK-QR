@@ -1,88 +1,90 @@
-# Page Config for Professional Look
+import streamlit as st
+import segno
+import io
+
+# Page Configuration
 st.set_page_config(
-    page_title="Pro QR Generator | Vikas Mishra",
+    page_title="QR Generator | Vikas Mishra",
     page_icon="🎯",
     layout="centered"
 )
 
-# Custom CSS for Premium Styling
+# Premium Custom CSS
 st.markdown("""
     <style>
     .stApp {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         color: white;
     }
-    .stTextInput > div > div > input {
-        background-color: #1e293b;
-        color: white;
-        border: 2px solid #38bdf8;
-        border-radius: 10px;
+    .stTextArea textarea {
+        background-color: #1e293b !important;
+        color: #38bdf8 !important;
+        border: 2px solid #334155 !important;
+        border-radius: 10px !important;
     }
     .stButton > button {
         width: 100%;
-        background: linear-gradient(90deg, #38bdf8, #2563eb);
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 10px;
-        padding: 10px;
-        transition: 0.3s;
+        background: linear-gradient(90deg, #38bdf8, #2563eb) !important;
+        color: white !important;
+        font-weight: bold !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
     }
-    .stButton > button:hover {
-        transform: scale(1.02);
-        box-shadow: 0px 0px 15px rgba(56, 189, 248, 0.5);
-    }
-    /* Vikas Mishra Credit Styling */
     .dev-credit {
         text-align: center;
         margin-top: 50px;
-        padding: 10px;
+        padding: 15px;
+        border-top: 1px solid #334155;
     }
     .dev-name {
         color: #38bdf8 !important;
         font-weight: bold;
         text-decoration: underline !important;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Main Dashboard UI
-st.title("🎯 Borderless QR Generator")
-st.write("Apni details niche diye gaye box mein bhariye aur turant professional QR code payiye.")
+# App Header
+st.markdown("<h1 style='text-align: center;'>🎯 Borderless QR Generator</h1>", unsafe_allow_html=True)
+st.write("Apni detail niche fill karein aur borderless QR download karein.")
 
-# Input Area
-detail = st.text_area("Yahan Detail Fill Karein:", placeholder="URL, Text, ya koi bhi jankari likhein...", height=150)
+# Input Box
+detail = st.text_area("Yahan Detail Fill Karein:", placeholder="Link ya Text likhein...", height=150)
 
 if st.button("Generate QR Code"):
     if detail.strip() == "":
         st.error("Kripya pehle detail fill karein!")
     else:
-        with st.spinner("QR Code generate ho raha hai..."):
-            # Creating Borderless QR using Segno
-            # border=0 se safed border puri tarah hat jata hai
-            qr = segno.make(detail, error='H')
-            
-            # Saving to memory buffer
-            img_buf = io.BytesIO()
-            qr.save(img_buf, kind='png', scale=10, border=0) 
-            img_buf.seek(0)
-            
-            # Displaying QR
-            st.markdown("### ✅ Aapka QR Code Ready Hai")
-            st.image(img_buf, caption="Preview (Borderless)", width=300)
-            
-            # Download Button
-            st.download_button(
-                label="📥 Download QR Code",
-                data=img_buf,
-                file_name="Vikas_Mishra_QR.png",
-                mime="image/png"
-            )
-            st.success("QR Code download ke liye taiyar hai!")
+        with st.spinner("QR ban raha hai..."):
+            try:
+                # Making QR with border=0 (No white space)
+                qr = segno.make(detail, error='H')
+                
+                # Saving to buffer
+                img_buf = io.BytesIO()
+                qr.save(img_buf, kind='png', scale=10, border=0) 
+                img_buf.seek(0)
+                
+                # Preview and Download
+                st.markdown("---")
+                st.image(img_buf, caption="Aapka Borderless QR", width=300)
+                
+                st.download_button(
+                    label="📥 Download QR Code",
+                    data=img_buf,
+                    file_name="Vikas_Mishra_QR.png",
+                    mime="image/png"
+                )
+                st.success("QR taiyar hai!")
+            except Exception as e:
+                st.error(f"Error: {e}")
 
-# Sidebar/Footer for Credit
-st.markdown("<div class='dev-credit'>", unsafe_allow_html=True)
-st.markdown("<p style='color: #94a3b8; margin-bottom: 2px;'>Developed By</p>", unsafe_allow_html=True)
-st.markdown("<p class='dev-name'>VIKAS MISHRA</p>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
+# Footer Credit
+st.markdown("""
+    <div class='dev-credit'>
+        <p style='color: #94a3b8; margin-bottom: 5px;'>Developed By</p>
+        <p class='dev-name'>VIKAS MISHRA</p>
+    </div>
+    """, unsafe_allow_html=True)
